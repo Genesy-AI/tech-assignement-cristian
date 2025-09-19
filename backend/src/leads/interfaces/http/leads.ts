@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { LeadPrismaRepository } from '../../../infrastructure/prisma/LeadPrismaRepository'
-import { BulkImportLeadsUseCase } from '../../../application/leads/usecases/BulkImportLeads'
-import { GenerateMessagesUseCase } from '../../../application/leads/usecases/GenerateMessages'
-import { VerifyEmailsUseCase } from '../../../application/leads/usecases/VerifyEmails'
-import { TemporalEmailVerificationService } from '../../../infrastructure/temporal/TemporalEmailVerificationService'
+import { LeadPrismaRepository } from '../../infrastructure/prisma/LeadPrismaRepository'
+import { BulkImportLeadsUseCase } from '../../application/usecases/BulkImportLeads'
+import { GenerateMessagesUseCase } from '../../application/usecases/GenerateMessages'
+import { VerifyEmailsUseCase } from '../../application/usecases/VerifyEmails'
+import { TemporalEmailVerificationService } from '../../infrastructure/temporal/TemporalEmailVerificationService'
 
 const router = Router()
 const leadRepo = new LeadPrismaRepository()

@@ -1,0 +1,17 @@
+// Domain exports
+export * from './domain/Lead'
+export * from './domain/LeadRepository'
+export * from './domain/services/MessageTemplateService'
+
+// Application exports
+export * from './application/ports/EmailVerificationService'
+export * from './application/usecases/BulkImportLeads'
+export * from './application/usecases/GenerateMessages'
+export * from './application/usecases/VerifyEmails'
+
+// Infrastructure exports
+export * from './infrastructure/prisma/LeadPrismaRepository'
+export * from './infrastructure/temporal/TemporalEmailVerificationService'
+
+// Interface exports
+export { default as leadsRouter } from './interfaces/http/leads'

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { generateMessageFromTemplate, Lead } from './messageGenerator'
+import { generateMessageFromTemplate } from '../leads/domain/services/MessageTemplateService'
+import { Lead } from '../leads/domain/Lead'
 
 describe('generateMessageFromTemplate', () => {
   const fullLead: Lead = {
@@ -13,7 +14,7 @@ describe('generateMessageFromTemplate', () => {
 
   const partialLead: Lead = {
     firstName: 'Jane',
-    lastName: null,
+    lastName: 'Smith',
     email: 'jane@example.com',
     jobTitle: undefined,
     companyName: '',
@@ -22,6 +23,8 @@ describe('generateMessageFromTemplate', () => {
 
   const minimalLead: Lead = {
     firstName: 'Bob',
+    lastName: 'Johnson',
+    email: 'bob@example.com',
   }
 
   describe('successful message generation', () => {
@@ -76,9 +79,15 @@ describe('generateMessageFromTemplate', () => {
 
   describe('error handling for missing fields', () => {
     it('should throw error when field is null', () => {
-      const template = 'Hello {firstName} {lastName}!'
-      expect(() => generateMessageFromTemplate(template, partialLead)).toThrow(
-        'Missing required field: lastName'
+      const leadWithNullField: Lead = {
+        firstName: 'Jane',
+        lastName: 'Smith',
+        email: 'jane@example.com',
+        jobTitle: null,
+      }
+      const template = 'Your job title is {jobTitle}'
+      expect(() => generateMessageFromTemplate(template, leadWithNullField)).toThrow(
+        'Missing required field: jobTitle'
       )
     })
 
@@ -97,9 +106,15 @@ describe('generateMessageFromTemplate', () => {
     })
 
     it('should throw error when field does not exist on lead', () => {
-      const template = 'Hello {firstName}, your last name is {lastName}'
-      expect(() => generateMessageFromTemplate(template, minimalLead)).toThrow(
-        'Missing required field: lastName'
+      const leadWithMissingField: Lead = {
+        firstName: 'Bob',
+        lastName: 'Johnson',
+        email: 'bob@example.com',
+        jobTitle: undefined,
+      }
+      const template = 'Your job title is {jobTitle}'
+      expect(() => generateMessageFromTemplate(template, leadWithMissingField)).toThrow(
+        'Missing required field: jobTitle'
       )
     })
   })
@@ -176,6 +191,8 @@ describe('generateMessageFromTemplate', () => {
     it('should handle very long field values', () => {
       const longLead: Lead = {
         firstName: 'A'.repeat(1000),
+        lastName: 'Long',
+        email: 'long@example.com',
         companyName: 'B'.repeat(500),
       }
       const template = 'Name: {firstName}, Company: {companyName}'
@@ -188,8 +205,9 @@ describe('generateMessageFromTemplate', () => {
     it('should handle special characters in field values', () => {
       const specialLead: Lead = {
         firstName: 'José',
-        companyName: 'Café & Co.',
+        lastName: 'García',
         email: 'josé@café.com',
+        companyName: 'Café & Co.',
       }
       const template = 'Hello {firstName} from {companyName}! Email: {email}'
       const result = generateMessageFromTemplate(template, specialLead)
@@ -199,6 +217,8 @@ describe('generateMessageFromTemplate', () => {
     it('should handle emojis in field values', () => {
       const emojiLead: Lead = {
         firstName: 'John 😊',
+        lastName: 'Emoji',
+        email: 'john@example.com',
         companyName: 'TechCorp 🚀',
       }
       const template = 'Hi {firstName} from {companyName}!'

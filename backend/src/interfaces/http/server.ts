@@ -1,5 +1,5 @@
 import express from 'express'
-import leadsRouter from './routes/leads'
+import { leadsRouter } from '../../leads'
 
 export function createHttpServer() {
   const app = express()

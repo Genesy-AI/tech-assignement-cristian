@@ -1,5 +1,5 @@
-import { LeadRepository } from '../../../domain/leads/LeadRepository'
-import { generateMessageFromTemplate } from '../../../domain/leads/services/MessageTemplateService'
+import { LeadRepository } from '../../domain/LeadRepository'
+import { generateMessageFromTemplate } from '../../domain/services/MessageTemplateService'
 
 export class GenerateMessagesUseCase {
   constructor(private readonly leadRepo: LeadRepository) {}

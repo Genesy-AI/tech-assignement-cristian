@@ -1,5 +1,5 @@
-import { LeadRepository } from '../../../domain/leads/LeadRepository'
-import { CreateLeadInput } from '../../../domain/leads/Lead'
+import { LeadRepository } from '../../domain/LeadRepository'
+import { CreateLeadInput } from '../../domain/Lead'
 
 export class BulkImportLeadsUseCase {
   constructor(private readonly leadRepo: LeadRepository) {}

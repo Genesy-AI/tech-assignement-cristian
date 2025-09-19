@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
-import { getPrismaClient } from './PrismaClient'
-import { CreateLeadInput, Lead, UpdateLeadInput } from '../../domain/leads/Lead'
-import { LeadRepository } from '../../domain/leads/LeadRepository'
+import { getPrismaClient } from '../../../infrastructure/prisma/PrismaClient'
+import { CreateLeadInput, Lead, UpdateLeadInput } from '../../domain/Lead'
+import { LeadRepository } from '../../domain/LeadRepository'
 
 export class LeadPrismaRepository implements LeadRepository {
   private readonly prisma = getPrismaClient()

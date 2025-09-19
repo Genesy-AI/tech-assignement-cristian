@@ -1,4 +1,4 @@
-import { LeadRepository } from '../../../domain/leads/LeadRepository'
+import { LeadRepository } from '../../domain/LeadRepository'
 import { EmailVerificationService } from '../ports/EmailVerificationService'
 
 export class VerifyEmailsUseCase {

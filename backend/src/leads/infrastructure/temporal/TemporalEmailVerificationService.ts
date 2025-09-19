@@ -1,6 +1,6 @@
-import { EmailVerificationService } from '../../application/leads/ports/EmailVerificationService'
+import { EmailVerificationService } from '../../application/ports/EmailVerificationService'
 import { Connection, Client } from '@temporalio/client'
-import { verifyEmailWorkflow } from '../../workflows'
+import { verifyEmailWorkflow } from '../../../workflows'
 
 export class TemporalEmailVerificationService implements EmailVerificationService {
   async verify(email: string): Promise<boolean> {
