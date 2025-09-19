@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { generateMessageFromTemplate } from '../leads/domain/services/MessageTemplateService'
-import { Lead } from '../leads/domain/Lead'
+import { generateMessageFromTemplate } from '../../src/leads/domain/services/MessageTemplateService'
+import { Lead } from '../../src/leads/domain/Lead'
 
 describe('generateMessageFromTemplate', () => {
   const fullLead: Lead = {

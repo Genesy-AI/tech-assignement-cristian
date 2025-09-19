@@ -1,5 +1,5 @@
 import { LeadRepository } from '../../domain/LeadRepository'
-import { EmailVerificationService } from '../ports/EmailVerificationService'
+import { EmailVerificationService } from '../../domain/services/EmailVerificationService'
 
 export class VerifyEmailsUseCase {
   constructor(
@@ -14,15 +14,21 @@ export class VerifyEmailsUseCase {
     }
 
     let verifiedCount = 0
-    const results: Array<{ leadId: number; emailVerified: boolean }> = []
+    const results: Array<{ leadId: number; emailVerified: boolean; reason?: string }> = []
     const errors: Array<{ leadId: number; leadName: string; error: string }> = []
 
     for (const lead of leads) {
       try {
-        const isVerified = await this.emailVerifier.verify(lead.email)
-        await this.leadRepo.update(lead.id!, { emailVerified: Boolean(isVerified) })
-        results.push({ leadId: lead.id!, emailVerified: isVerified })
-        verifiedCount += 1
+        const verification = this.emailVerifier.verify(lead.email)
+        await this.leadRepo.update(lead.id!, { emailVerified: verification.isValid })
+        results.push({ 
+          leadId: lead.id!, 
+          emailVerified: verification.isValid,
+          reason: verification.reason 
+        })
+        if (verification.isValid) {
+          verifiedCount += 1
+        }
       } catch (error) {
         errors.push({
           leadId: lead.id!,

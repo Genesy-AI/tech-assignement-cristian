@@ -3,7 +3,7 @@ import { LeadPrismaRepository } from '../../infrastructure/prisma/LeadPrismaRepo
 import { BulkImportLeadsUseCase } from '../../application/usecases/BulkImportLeads'
 import { GenerateMessagesUseCase } from '../../application/usecases/GenerateMessages'
 import { VerifyEmailsUseCase } from '../../application/usecases/VerifyEmails'
-import { TemporalEmailVerificationService } from '../../infrastructure/temporal/TemporalEmailVerificationService'
+import { EmailVerificationService } from '../../domain/services/EmailVerificationService'
 
 const router = Router()
 const leadRepo = new LeadPrismaRepository()
@@ -110,7 +110,7 @@ router.post('/leads/verify-emails', async (req, res) => {
     return res.status(400).json({ error: 'leadIds must be a non-empty array' })
   }
   try {
-    const verifier = new TemporalEmailVerificationService()
+    const verifier = new EmailVerificationService()
     const uc = new VerifyEmailsUseCase(leadRepo, verifier)
     const result = await uc.execute(leadIds.map((n: number) => Number(n)))
     if ('error' in result) return res.status(404).json(result)

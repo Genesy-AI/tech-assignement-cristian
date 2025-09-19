@@ -1,10 +1,11 @@
 // Domain exports
 export * from './domain/Lead'
 export * from './domain/LeadRepository'
+export * from './domain/value-objects/Email'
 export * from './domain/services/MessageTemplateService'
+export * from './domain/services/EmailVerificationService'
 
 // Application exports
-export * from './application/ports/EmailVerificationService'
 export * from './application/usecases/BulkImportLeads'
 export * from './application/usecases/GenerateMessages'
 export * from './application/usecases/VerifyEmails'
