@@ -5,6 +5,7 @@ export interface Lead {
   firstName: string
   lastName: string
   email: string
+  phone?: string | null
   jobTitle?: string | null
   countryCode?: string | null
   companyName?: string | null
@@ -13,8 +14,8 @@ export interface Lead {
 }
 
 export type CreateLeadInput = Pick<Lead, 'firstName' | 'lastName' | 'email'> &
-  Partial<Pick<Lead, 'jobTitle' | 'countryCode' | 'companyName'>>
+  Partial<Pick<Lead, 'phone' | 'jobTitle' | 'countryCode' | 'companyName'>>
 
 export type UpdateLeadInput = Partial<
-  Pick<Lead, 'firstName' | 'lastName' | 'email' | 'jobTitle' | 'countryCode' | 'companyName' | 'message' | 'emailVerified'>
+  Pick<Lead, 'firstName' | 'lastName' | 'email' | 'phone' | 'jobTitle' | 'countryCode' | 'companyName' | 'message' | 'emailVerified'>
 >

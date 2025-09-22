@@ -4,6 +4,7 @@ export interface CsvLead {
   firstName: string
   lastName: string
   email: string
+  phone?: string
   jobTitle?: string
   countryCode?: string
   companyName?: string
@@ -72,6 +73,9 @@ export const parseCsv = (content: string): CsvLead[] => {
           break
         case 'companyname':
           lead.companyName = trimmedValue || undefined
+          break
+        case 'phone':
+          lead.phone = trimmedValue || undefined
           break
       }
     })

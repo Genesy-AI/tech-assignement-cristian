@@ -3,17 +3,23 @@ import { LeadPrismaRepository } from '../../infrastructure/prisma/LeadPrismaRepo
 import { BulkImportLeadsUseCase } from '../../application/usecases/BulkImportLeads'
 import { GenerateMessagesUseCase } from '../../application/usecases/GenerateMessages'
 import { VerifyEmailsUseCase } from '../../application/usecases/VerifyEmails'
+import { EnrichPhoneNumbersUseCase } from '../../application/usecases/EnrichPhoneNumbers'
 import { EmailVerificationService } from '../../domain/services/EmailVerificationService'
 
 const router = Router()
 const leadRepo = new LeadPrismaRepository()
 
 router.post('/leads', async (req, res) => {
-  const { name, lastName, email } = req.body
+  const { name, lastName, email, phone } = req.body
   if (!name || !lastName || !email) {
     return res.status(400).json({ error: 'firstName, lastName, and email are required' })
   }
-  const lead = await leadRepo.create({ firstName: String(name), lastName: String(lastName), email: String(email) })
+  const lead = await leadRepo.create({ 
+    firstName: String(name), 
+    lastName: String(lastName), 
+    email: String(email),
+    phone: phone ? String(phone) : null
+  })
   res.json(lead)
 })
 
@@ -30,10 +36,11 @@ router.get('/leads', async (_req, res) => {
 
 router.patch('/leads/:id', async (req, res) => {
   const { id } = req.params
-  const { name, email } = req.body
+  const { name, email, phone } = req.body
   const lead = await leadRepo.update(Number(id), {
     firstName: String(name),
     email: String(email),
+    phone: phone ? String(phone) : null,
   })
   res.json(lead)
 })
@@ -118,6 +125,24 @@ router.post('/leads/verify-emails', async (req, res) => {
   } catch (error) {
     console.error('Error verifying emails:', error)
     res.status(500).json({ error: 'Failed to verify emails' })
+  }
+})
+
+router.post('/leads/enrich-phone', async (req, res) => {
+  if (!req.body || typeof req.body !== 'object') {
+    return res.status(400).json({ error: 'Request body is required and must be valid JSON' })
+  }
+  const { leadIds } = req.body
+  if (!Array.isArray(leadIds) || leadIds.length === 0) {
+    return res.status(400).json({ error: 'leadIds must be a non-empty array' })
+  }
+  try {
+    const uc = new EnrichPhoneNumbersUseCase(leadRepo)
+    const result = await uc.execute({ leadIds: leadIds.map((n: number) => Number(n)) })
+    res.json(result)
+  } catch (error) {
+    console.error('Error enriching phone numbers:', error)
+    res.status(500).json({ error: 'Failed to enrich phone numbers' })
   }
 })
 

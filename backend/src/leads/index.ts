@@ -1,7 +1,6 @@
 // Domain exports
 export * from './domain/Lead'
 export * from './domain/LeadRepository'
-export * from './domain/value-objects/Email'
 export * from './domain/services/MessageTemplateService'
 export * from './domain/services/EmailVerificationService'
 

@@ -22,5 +22,5 @@
       "@interfaces/*": ["src/interfaces/*"]
     }
   },
-  "exclude": ["vitest.config.ts"]
+  "exclude": ["vitest.config.ts", "test"]
 }
