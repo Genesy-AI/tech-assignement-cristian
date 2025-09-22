@@ -4,7 +4,7 @@ import { CreateLeadInput } from '../../domain/Lead'
 export class BulkImportLeadsUseCase {
   constructor(private readonly leadRepo: LeadRepository) {}
 
-  async execute(leads: Array<CreateLeadInput & { phone?: string | null; companyName?: string | null }>) {
+  async execute(leads: Array<CreateLeadInput & { phone?: string | null; companyName?: string | null; companyWebsite?: string | null }>) {
     const validLeads = leads.filter((lead) => {
       return (
         lead.firstName &&

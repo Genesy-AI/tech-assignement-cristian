@@ -16,6 +16,7 @@ export class LeadPrismaRepository implements LeadRepository {
         jobTitle: input.jobTitle ?? null,
         countryCode: input.countryCode ?? null,
         companyName: input.companyName ?? null,
+        companyWebsite: input.companyWebsite ?? null,
       },
     })
     return lead
@@ -40,6 +41,7 @@ export class LeadPrismaRepository implements LeadRepository {
         jobTitle: input.jobTitle,
         countryCode: input.countryCode,
         companyName: input.companyName,
+        companyWebsite: input.companyWebsite,
         message: input.message,
         emailVerified: input.emailVerified,
       },

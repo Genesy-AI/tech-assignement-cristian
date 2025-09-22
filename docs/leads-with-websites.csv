@@ -1,0 +1,6 @@
+firstName,lastName,email,jobTitle,companyName,companyWebsite,phone
+John,Doe,john.doe@example.com,CEO,Example Corp,example.com,+1234567890
+Jane,Smith,jane.smith@techcorp.com,CTO,TechCorp,techcorp.com,
+Alice,Johnson,alice@startup.io,Founder,Startup Inc,startup.io,+1987654321
+Bob,Wilson,bob.wilson@bigtech.com,VP Engineering,BigTech,bigtech.com,
+Carol,Davis,carol@consulting.com,Senior Consultant,Davis Consulting,davisconsulting.com,+1555123456

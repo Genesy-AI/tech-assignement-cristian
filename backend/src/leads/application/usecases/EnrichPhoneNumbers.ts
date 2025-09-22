@@ -79,7 +79,7 @@ export class EnrichPhoneNumbersUseCase {
               leadId: lead.id!,
               fullName: leadName,
               email: lead.email,
-              companyWebsite: lead.companyName ? `${lead.companyName.toLowerCase().replace(/\s+/g, '')}.com` : undefined,
+              companyWebsite: lead.companyWebsite || undefined,
               jobTitle: lead.jobTitle || undefined
             }]
           })
