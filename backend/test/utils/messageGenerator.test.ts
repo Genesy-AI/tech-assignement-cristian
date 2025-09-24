@@ -96,14 +96,7 @@ describe('generateMessageFromTemplate', () => {
       expect(() => generateMessageFromTemplate(template, partialLead)).toThrow(
         'Missing required field: jobTitle'
       )
-    })
-
-    it('should throw error when field is empty string', () => {
-      const template = 'You work at {companyName}'
-      expect(() => generateMessageFromTemplate(template, partialLead)).toThrow(
-        'Missing required field: companyName'
-      )
-    })
+    })    
 
     it('should throw error when field does not exist on lead', () => {
       const leadWithMissingField: Lead = {

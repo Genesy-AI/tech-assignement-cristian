@@ -2,8 +2,12 @@ export class CompanyWebsite {
   private readonly value: string
 
   constructor(value: string, validate: boolean = true) {
-    const trimmed = value.trim()
-    this.value = this.normalizeUrl(trimmed)
+    if (value === null || value === undefined) {
+      this.value = ''
+    } else {
+      const trimmed = value.trim()
+      this.value = this.normalizeUrl(trimmed)
+    }
     
     if (validate) {
       this.validate()
@@ -15,7 +19,11 @@ export class CompanyWebsite {
   }
 
   validate(): void {
-    if (!this.value || typeof this.value !== 'string') {
+    if (this.value === null || this.value === undefined) {
+      throw new Error('Company website must be a string')
+    }
+    
+    if (typeof this.value !== 'string') {
       throw new Error('Company website must be a string')
     }
     
@@ -33,14 +41,9 @@ export class CompanyWebsite {
   }
 
   private isValidUrl(url: string): boolean {
-    try {
-      // Add protocol if missing
-      const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`
-      new URL(urlWithProtocol)
-      return true
-    } catch {
-      return false
-    }
+    // Simple domain validation: must have at least one dot and end with a valid TLD
+    const domainRegex = /^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/
+    return domainRegex.test(url)
   }
 
   private normalizeUrl(url: string): string {

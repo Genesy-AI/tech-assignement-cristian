@@ -2,8 +2,12 @@ export class CompanyName {
   private readonly value: string
 
   constructor(value: string, validate: boolean = true) {
-    const trimmed = value.trim()
-    this.value = trimmed
+    if (value === null || value === undefined) {
+      this.value = ''
+    } else {
+      const trimmed = value.trim()
+      this.value = trimmed
+    }
     
     if (validate) {
       this.validate()
@@ -15,7 +19,11 @@ export class CompanyName {
   }
 
   validate(): void {
-    if (!this.value || typeof this.value !== 'string') {
+    if (this.value === null || this.value === undefined) {
+      throw new Error('Company name must be a string')
+    }
+    
+    if (typeof this.value !== 'string') {
       throw new Error('Company name must be a string')
     }
     
