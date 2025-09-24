@@ -1,11 +1,34 @@
 # Explanation of my take-home assessment
 
+## 🚀 Product perspective Improvements
+
+### Temporal Phone Waterfall
+Implemented a **Temporal workflow** that finds a user's phone number by querying three providers in sequence: Orion Connect (best data, slow), Nimbus Lookup (new provider), and Astra Dialer (fastest, worst data). The workflow stops early when a phone is found and saves it to the database.
+
+### Data Validation System
+Added comprehensive validation for all lead data fields (email, phone, names, company info) with proper error messages. Implemented both strict validation for new data and lenient validation for existing data to handle bulk imports without breaking.
+
+### CSV Bulk Import Enhancement
+Improved the CSV import process with better validation, error handling, and user feedback. Users can now see exactly which rows have issues and fix them before importing.
+
+### Domain-Driven Design Architecture
+Implemented a clean, scalable architecture using Domain-Driven Design principles with value objects, repositories, and proper separation of concerns. This ensures maintainability and makes the codebase easier to understand and extend.
+
+### Comprehensive Testing Strategy
+Added extensive test coverage including unit tests for value objects, domain entities, Temporal workflows, and activities. All tests use proper mocking and follow Temporal testing best practices.
+
+---
+
+## ⚙️ Installation instructions
+
 Installation instructions of my take-home assesment.
 1. Please go to backend/
 2. Duplicate env.sample to .env
 3. Fill the .env with the urls and api_keys provided in /README.md
 
-## Architectural improvements
+---
+
+## ⚙️ Technical perspective improvements in detail
 
 ### Domain Driven Design
 I made a comprehensive refactor to domain driven design that includes:
@@ -172,7 +195,7 @@ This ensures scalibility and manintability in the future.
 
 ---
 
-## Bug Fixes
+## 🐛 Bug Fixes
 
 ### 1. Email Validation Bug
 
