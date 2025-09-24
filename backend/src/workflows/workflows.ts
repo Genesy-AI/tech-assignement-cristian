@@ -33,6 +33,16 @@ const { astraDialerActivity } = proxyActivities<typeof activities>({
   },
 })
 
+const { savePhoneActivity } = proxyActivities<typeof activities>({
+  startToCloseTimeout: '10 seconds',
+  retry: {
+    initialInterval: '1 second',
+    backoffCoefficient: 2.0,
+    maximumInterval: '5 seconds',
+    maximumAttempts: 3,
+  },
+})
+
 export interface PhoneEnrichmentWorkflowInput {
   lead: Lead
 }
@@ -63,9 +73,19 @@ export async function phoneEnrichmentWorkflow(
     const result = await provider.activity({ lead })
 
     if (result.success && result.phone) {
-      return {
-        phone: result.phone,
-        provider: provider.name
+      const saveResult = await savePhoneActivity({
+        leadId: lead.id!,
+        phone: result.phone
+      })
+
+      if (saveResult.success) {
+        console.log(`[Orchestrator] Successfully saved phone ${result.phone} for lead ${lead.id} using ${provider.name}`)
+        return {
+          phone: result.phone,
+          provider: provider.name
+        }
+      } else {
+        console.error(`[Orchestrator] Failed to save phone for lead ${lead.id}: ${saveResult.error}`)
       }
     }
   }

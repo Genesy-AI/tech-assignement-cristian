@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getProviderConfig } from '../../config/env'
 import type { PhoneEnrichmentInput, PhoneEnrichmentResult } from './types'
 
 /**
@@ -20,17 +21,18 @@ export async function nimbusLookupActivity(input: PhoneEnrichmentInput): Promise
   }
 
   try {
+    const config = getProviderConfig()
     console.log(`[NimbusLookup] Querying phone for: ${email} (${jobTitle})`)
     
     const response = await axios.post(
-      'https://api.genesy.ai/api/tmp/numbusLookup',
+      config.nimbusLookup.baseUrl,
       {
         email,
         jobTitle
       },
       {
         params: {
-          api: '000099998888'
+          api: config.nimbusLookup.apiKey
         },
         headers: {
           'Content-Type': 'application/json'

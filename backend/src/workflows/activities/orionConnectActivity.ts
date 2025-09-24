@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getProviderConfig } from '../../config/env'
 import type { PhoneEnrichmentInput, PhoneEnrichmentResult } from './types'
 
 /**
@@ -21,17 +22,18 @@ export async function orionConnectActivity(input: PhoneEnrichmentInput): Promise
   }
 
   try {
+    const config = getProviderConfig()
     console.log(`[OrionConnect] Querying phone for: ${fullName} at ${companyWebsite}`)
     
     const response = await axios.post(
-      'https://api.genesy.ai/api/tmp/orionConnect',
+      config.orionConnect.baseUrl,
       {
         fullName,
         companyWebsite
       },
       {
         headers: {
-          'x-auth-me': 'mySecretKey123',
+          'x-auth-me': config.orionConnect.authKey,
           'Content-Type': 'application/json'
         },
         timeout: 10000 // 10 second timeout

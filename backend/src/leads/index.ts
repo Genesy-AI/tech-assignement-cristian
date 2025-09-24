@@ -11,7 +11,6 @@ export * from './application/usecases/VerifyEmails'
 
 // Infrastructure exports
 export * from './infrastructure/prisma/LeadPrismaRepository'
-export * from './infrastructure/temporal/TemporalEmailVerificationService'
 
 // Interface exports
 export { default as leadsRouter } from './interfaces/http/leads'

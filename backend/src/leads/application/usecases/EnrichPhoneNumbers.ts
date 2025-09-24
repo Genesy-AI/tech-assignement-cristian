@@ -38,8 +38,11 @@ export class EnrichPhoneNumbersUseCase {
         try {
           if (lead.phone) {
             return {
+              leadId: lead.id!,
               phone: lead.phone,
-              provider: 'existing'
+              provider: 'existing',
+              success: true,
+              attempts: []
             } as PhoneEnrichmentWorkflowResult
           }
 
@@ -53,13 +56,13 @@ export class EnrichPhoneNumbersUseCase {
             }]
           })
 
-          // Update lead with phone number if found
-          if (result.phone) {
-            await this.leadRepo.update(lead.id!, { phone: result.phone })
-            console.log(`[EnrichPhoneNumbers] Updated lead ${lead.id} with phone: ${result.phone} (provider: ${result.provider})`)
-          }
-
-          return result
+          return {
+            leadId: lead.id!,
+            phone: result.phone,
+            provider: result.provider,
+            success: !!result.phone,
+            attempts: []
+          } as PhoneEnrichmentWorkflowResult
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Unknown error'
           console.error(`[EnrichPhoneNumbers] Error processing lead ${lead.id}:`, errorMessage)
