@@ -20,7 +20,7 @@ export function generateMessageFromTemplate(template: string, lead: Lead): strin
     if (fieldName in availableFields) {
       const fieldValue = availableFields[fieldName as keyof typeof availableFields]
 
-      if (fieldValue === null || fieldValue === undefined || fieldValue === '') {
+      if (fieldValue == null) {
         throw new Error(`Missing required field: ${fieldName}`)
       }
 

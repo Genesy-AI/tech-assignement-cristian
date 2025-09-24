@@ -16,12 +16,13 @@ export class GenerateMessagesUseCase {
     for (const lead of leads) {
       try {
         const message = generateMessageFromTemplate(template, lead)
-        await this.leadRepo.update(lead.id!, { message })
+        const updatedLead = lead.updateMessage(message)
+        await this.leadRepo.update(lead.id!, updatedLead)
         generatedCount++
       } catch (error) {
         errors.push({
           leadId: lead.id!,
-          leadName: `${lead.firstName} ${lead.lastName}`.trim(),
+          leadName: `${lead.firstName.getValue()} ${lead.lastName.getValue()}`.trim(),
           error: error instanceof Error ? error.message : 'Unknown error',
         })
       }

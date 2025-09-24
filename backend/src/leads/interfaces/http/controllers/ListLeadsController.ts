@@ -5,5 +5,5 @@ const leadRepo = new LeadPrismaRepository()
 
 export const listLeads = async (_req: Request, res: Response) => {
   const leads = await leadRepo.findAll()
-  res.json(leads)
+  res.json(leads.map(lead => lead.toPersistence()))
 }

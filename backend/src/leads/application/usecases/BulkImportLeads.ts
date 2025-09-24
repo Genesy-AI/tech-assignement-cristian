@@ -1,23 +1,43 @@
 import { LeadRepository } from '../../domain/LeadRepository'
-import { CreateLeadInput } from '../../domain/Lead'
+import { Lead } from '../../domain/Lead'
 
 export class BulkImportLeadsUseCase {
   constructor(private readonly leadRepo: LeadRepository) {}
 
-  async execute(leads: Array<CreateLeadInput & { phone?: string | null; companyName?: string | null; companyWebsite?: string | null }>) {
-    const validLeads = leads.filter((lead) => {
-      return (
-        lead.firstName &&
-        lead.lastName &&
-        lead.email &&
-        typeof lead.firstName === 'string' &&
-        lead.firstName.trim() &&
-        typeof lead.lastName === 'string' &&
-        lead.lastName.trim() &&
-        typeof lead.email === 'string' &&
-        lead.email.trim()
-      )
-    })
+  async execute(leads: Array<{
+    firstName: string
+    lastName: string
+    email: string
+    phone?: string | null
+    jobTitle?: string | null
+    countryCode?: string | null
+    companyName?: string | null
+    companyWebsite?: string | null
+  }>) {
+    const validLeads: Lead[] = []
+    const invalidLeads: Array<{ lead: any; error: string }> = []
+
+    // Validate and create domain objects
+    for (const leadData of leads) {
+      try {
+        const lead = Lead.create({
+          firstName: leadData.firstName,
+          lastName: leadData.lastName,
+          email: leadData.email,
+          phone: leadData.phone,
+          jobTitle: leadData.jobTitle,
+          countryCode: leadData.countryCode,
+          companyName: leadData.companyName,
+          companyWebsite: leadData.companyWebsite,
+        })
+        validLeads.push(lead)
+      } catch (error) {
+        invalidLeads.push({
+          lead: leadData,
+          error: error instanceof Error ? error.message : 'Unknown validation error',
+        })
+      }
+    }
 
     if (validLeads.length === 0) {
       return {
@@ -29,16 +49,17 @@ export class BulkImportLeadsUseCase {
       }
     }
 
+    // Check for duplicates
     const existingLeads = await Promise.all(
-      validLeads.map((l) => this.leadRepo.findByFirstAndLast(l.firstName.trim(), l.lastName.trim()))
+      validLeads.map((lead) => this.leadRepo.findByFirstAndLast(lead.firstName.getValue(), lead.lastName.getValue()))
     )
 
     const existingSet = new Set(
-      existingLeads.flat().map((lead) => `${lead.firstName.toLowerCase()}_${(lead.lastName || '').toLowerCase()}`)
+      existingLeads.flat().map((lead) => `${lead.firstName.getValue().toLowerCase()}_${lead.lastName.getValue().toLowerCase()}`)
     )
 
     const uniqueLeads = validLeads.filter((lead) => {
-      const key = `${lead.firstName.toLowerCase()}_${lead.lastName.toLowerCase()}`
+      const key = `${lead.firstName.getValue().toLowerCase()}_${lead.lastName.getValue().toLowerCase()}`
       return !existingSet.has(key)
     })
 
@@ -47,19 +68,11 @@ export class BulkImportLeadsUseCase {
 
     for (const lead of uniqueLeads) {
       try {
-        await this.leadRepo.create({
-          firstName: lead.firstName.trim(),
-          lastName: lead.lastName.trim(),
-          email: lead.email,
-          phone: lead.phone ? lead.phone.trim() : null,
-          jobTitle: lead.jobTitle ? lead.jobTitle.trim() : null,
-          countryCode: lead.countryCode ? lead.countryCode.trim() : null,
-          companyName: lead.companyName ? lead.companyName.trim() : null,
-        })
+        await this.leadRepo.create(lead)
         importedCount++
       } catch (error) {
         errors.push({
-          lead,
+          lead: lead.toPersistence(),
           error: error instanceof Error ? error.message : 'Unknown error',
         })
       }
@@ -70,7 +83,7 @@ export class BulkImportLeadsUseCase {
       importedCount,
       duplicatesSkipped: validLeads.length - uniqueLeads.length,
       invalidLeads: leads.length - validLeads.length,
-      errors,
+      errors: [...errors, ...invalidLeads],
     }
   }
 }

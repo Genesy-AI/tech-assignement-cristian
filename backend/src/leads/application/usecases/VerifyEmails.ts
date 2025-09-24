@@ -19,8 +19,9 @@ export class VerifyEmailsUseCase {
 
     for (const lead of leads) {
       try {
-        const verification = this.emailVerifier.verify(lead.email)
-        await this.leadRepo.update(lead.id!, { emailVerified: verification.isValid })
+        const verification = this.emailVerifier.verify(lead.email.getValue())
+        const updatedLead = verification.isValid ? lead.markEmailAsVerified() : lead.markEmailAsUnverified()
+        await this.leadRepo.update(lead.id!, updatedLead)
         results.push({ 
           leadId: lead.id!, 
           emailVerified: verification.isValid,
@@ -32,7 +33,7 @@ export class VerifyEmailsUseCase {
       } catch (error) {
         errors.push({
           leadId: lead.id!,
-          leadName: `${lead.firstName} ${lead.lastName}`.trim(),
+          leadName: `${lead.firstName.getValue()} ${lead.lastName.getValue()}`.trim(),
           error: error instanceof Error ? error.message : 'Unknown error',
         })
       }

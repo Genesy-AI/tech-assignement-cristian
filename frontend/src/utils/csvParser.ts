@@ -19,6 +19,12 @@ export const isValidEmail = (email: string): boolean => {
   return emailRegex.test(email)
 }
 
+export const isValidCountryCode = (countryCode: string): boolean => {
+  // Valid ISO 3166-1 alpha-2 country codes are exactly 2 uppercase letters
+  const countryCodeRegex = /^[A-Z]{2}$/
+  return countryCodeRegex.test(countryCode)
+}
+
 export const parseCsv = (content: string): CsvLead[] => {
   if (!content?.trim()) {
     throw new Error('CSV content cannot be empty')
@@ -76,6 +82,10 @@ export const parseCsv = (content: string): CsvLead[] => {
           lead.companyName = trimmedValue || undefined
           break
         case 'phone':
+        case 'phonenumber':
+        case 'phone_number':
+        case 'mobile':
+        case 'telephone':
           lead.phone = trimmedValue || undefined
           break
         case 'companywebsite':
@@ -96,6 +106,9 @@ export const parseCsv = (content: string): CsvLead[] => {
       errors.push('Email is required')
     } else if (!isValidEmail(lead.email)) {
       errors.push('Invalid email format')
+    }
+    if (lead.countryCode && !isValidCountryCode(lead.countryCode)) {
+      errors.push('Invalid country code format (must be 2 uppercase letters)')
     }
 
     data.push({

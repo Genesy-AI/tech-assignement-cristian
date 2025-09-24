@@ -1,6 +1,6 @@
 import { proxyActivities } from '@temporalio/workflow'
 import type * as activities from './activities'
-import type { Lead } from '../leads'
+import type { WorkflowLeadData } from './activities/types'
 
 // Phone enrichment activities with specific retry policies
 const { orionConnectActivity } = proxyActivities<typeof activities>({
@@ -44,7 +44,7 @@ const { savePhoneActivity } = proxyActivities<typeof activities>({
 })
 
 export interface PhoneEnrichmentWorkflowInput {
-  lead: Lead
+  lead: WorkflowLeadData
 }
 
 export interface PhoneEnrichmentWorkflowResult {

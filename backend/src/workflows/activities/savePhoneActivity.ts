@@ -1,5 +1,6 @@
 import { LeadRepository } from '../../leads/domain/LeadRepository'
 import { LeadPrismaRepository } from '../../leads/infrastructure/prisma/LeadPrismaRepository'
+import { Lead } from '../../leads/domain/Lead'
 
 export interface SavePhoneInput {
   leadId: number
@@ -17,7 +18,18 @@ export async function savePhoneActivity(input: SavePhoneInput): Promise<SavePhon
   
   try {
     const leadRepo: LeadRepository = new LeadPrismaRepository()
-    await leadRepo.update(leadId, { phone })
+    
+    // Get the existing lead to verify it exists
+    const existingLead = await leadRepo.findById(leadId)
+    if (!existingLead) {
+      return {
+        success: false,
+        error: 'Lead not found'
+      }
+    }
+
+    // Update only the phone field using the specific method
+    await leadRepo.updatePhone(leadId, phone)
     
     return {
       success: true

@@ -33,13 +33,13 @@ export class EnrichPhoneNumbersUseCase {
 
     try {
       const enrichmentPromises = leads.map(async (lead) => {
-        const leadName = `${lead.firstName} ${lead.lastName}`.trim()
+        const leadName = `${lead.firstName.getValue()} ${lead.lastName.getValue()}`.trim()
         
         try {
           if (lead.phone) {
             return {
               leadId: lead.id!,
-              phone: lead.phone,
+              phone: lead.phone.getValue(),
               provider: 'existing',
               success: true,
               attempts: []
@@ -48,11 +48,29 @@ export class EnrichPhoneNumbersUseCase {
 
           // Create idempotent workflow ID to prevent duplicate runs
           const workflowId = `enrich-phone-${lead.id}`
+          // Create compatibility object for workflow
+          const leadData = lead.toPersistence()
+          const workflowLead = {
+            id: leadData.id,
+            firstName: leadData.firstName,
+            lastName: leadData.lastName,
+            email: leadData.email,
+            phone: leadData.phone,
+            jobTitle: leadData.jobTitle,
+            countryCode: leadData.countryCode,
+            companyName: leadData.companyName,
+            companyWebsite: leadData.companyWebsite,
+            message: leadData.message,
+            emailVerified: leadData.emailVerified,
+            createdAt: lead.createdAt,
+            updatedAt: lead.updatedAt
+          } as any
+
           const result = await client.workflow.execute(phoneEnrichmentWorkflow, {
             taskQueue: 'myQueue',
             workflowId,
             args: [{
-              lead
+              lead: workflowLead
             }]
           })
 
