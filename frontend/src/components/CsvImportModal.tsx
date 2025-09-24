@@ -91,15 +91,15 @@ export const CsvImportModal: FC<CsvImportModalProps> = ({ isOpen, onClose }) => 
 
   const importMutation = useMutation({
     mutationFn: async (leads: CsvLead[]) => {
-      const validLeads = leads.filter((lead) => lead.isValid)
-
-      const leadsToImport = validLeads.map((lead) => ({
+      const leadsToImport = leads.map((lead) => ({
         firstName: lead.firstName,
         lastName: lead.lastName,
         email: lead.email,
+        phone: lead.phone || undefined,
         jobTitle: lead.jobTitle || undefined,
         countryCode: lead.countryCode || undefined,
         companyName: lead.companyName || undefined,
+        companyWebsite: lead.companyWebsite || undefined,
       }))
 
       return api.leads.bulkImport({ leads: leadsToImport })
@@ -112,7 +112,14 @@ export const CsvImportModal: FC<CsvImportModalProps> = ({ isOpen, onClose }) => 
         message += ` (${data.duplicatesSkipped} duplicates skipped)`
       }
       if (data.invalidLeads > 0) {
-        message += ` (${data.invalidLeads} invalid leads excluded)`
+        message += ` (${data.invalidLeads} invalid leads excluded by backend validation)`
+      }
+
+      // Show detailed validation results if there are errors
+      if (data.errors && data.errors.length > 0) {
+        console.log('Backend validation errors:', data.errors)
+        // You could show these in a modal or expand the success message
+        message += `\n\nBackend validation found ${data.errors.length} additional issues.`
       }
 
       toast.success(message)

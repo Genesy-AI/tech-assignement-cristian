@@ -14,15 +14,76 @@ export interface CsvLead {
   rowIndex: number
 }
 
+// Validation functions that match backend value object validation exactly
 export const isValidEmail = (email: string): boolean => {
+  if (!email || typeof email !== 'string') return false
+  if (email.length === 0) return false
+  if (email.length > 255) return false
+  
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
 
+export const isValidPhone = (phone: string): boolean => {
+  if (!phone || typeof phone !== 'string') return false
+  if (phone.length === 0) return false
+  if (phone.length > 20) return false
+  
+  // Allow international phone formats with +, -, spaces, parentheses, and x for extensions
+  const phoneRegex = /^[\+]?[\d\s\-\(\)\.x]+$/
+  return phoneRegex.test(phone) && phone.replace(/[\s\-\(\)\.x]/g, '').length >= 7
+}
+
+export const isValidFirstName = (firstName: string): boolean => {
+  if (!firstName || typeof firstName !== 'string') return false
+  if (firstName.length === 0) return false
+  if (firstName.length > 100) return false
+  return true
+}
+
+export const isValidLastName = (lastName: string): boolean => {
+  if (!lastName || typeof lastName !== 'string') return false
+  if (lastName.length === 0) return false
+  if (lastName.length > 100) return false
+  return true
+}
+
+export const isValidJobTitle = (jobTitle: string): boolean => {
+  if (!jobTitle || typeof jobTitle !== 'string') return false
+  if (jobTitle.length === 0) return false
+  if (jobTitle.length > 200) return false
+  return true
+}
+
+export const isValidCompanyName = (companyName: string): boolean => {
+  if (!companyName || typeof companyName !== 'string') return false
+  if (companyName.length === 0) return false
+  if (companyName.length > 200) return false
+  return true
+}
+
 export const isValidCountryCode = (countryCode: string): boolean => {
+  if (!countryCode || typeof countryCode !== 'string') return false
+  if (countryCode.length === 0) return false
+  
   // Valid ISO 3166-1 alpha-2 country codes are exactly 2 uppercase letters
   const countryCodeRegex = /^[A-Z]{2}$/
   return countryCodeRegex.test(countryCode)
+}
+
+export const isValidCompanyWebsite = (website: string): boolean => {
+  if (!website || typeof website !== 'string') return false
+  if (website.length === 0) return false
+  if (website.length > 500) return false
+  
+  try {
+    // Add protocol if missing
+    const urlWithProtocol = website.startsWith('http') ? website : `https://${website}`
+    new URL(urlWithProtocol)
+    return true
+  } catch {
+    return false
+  }
 }
 
 export const parseCsv = (content: string): CsvLead[] => {
@@ -96,19 +157,45 @@ export const parseCsv = (content: string): CsvLead[] => {
     })
 
     const errors: string[] = []
+    
+    // Validate required fields with exact backend validation rules
     if (!lead.firstName?.trim()) {
       errors.push('First name is required')
+    } else if (!isValidFirstName(lead.firstName)) {
+      errors.push('First name cannot be empty and cannot exceed 100 characters')
     }
+    
     if (!lead.lastName?.trim()) {
       errors.push('Last name is required')
+    } else if (!isValidLastName(lead.lastName)) {
+      errors.push('Last name cannot be empty and cannot exceed 100 characters')
     }
+    
     if (!lead.email?.trim()) {
       errors.push('Email is required')
     } else if (!isValidEmail(lead.email)) {
       errors.push('Invalid email format')
     }
+    
+    // Validate optional fields if provided
+    if (lead.phone && !isValidPhone(lead.phone)) {
+      errors.push('Invalid phone format')
+    }
+    
+    if (lead.jobTitle && !isValidJobTitle(lead.jobTitle)) {
+      errors.push('Job title cannot be empty and cannot exceed 200 characters')
+    }
+    
+    if (lead.companyName && !isValidCompanyName(lead.companyName)) {
+      errors.push('Company name cannot be empty and cannot exceed 200 characters')
+    }
+    
     if (lead.countryCode && !isValidCountryCode(lead.countryCode)) {
       errors.push('Invalid country code format (must be 2 uppercase letters)')
+    }
+    
+    if (lead.companyWebsite && !isValidCompanyWebsite(lead.companyWebsite)) {
+      errors.push('Invalid website URL format')
     }
 
     data.push({
