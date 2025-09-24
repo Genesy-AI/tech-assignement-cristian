@@ -19,8 +19,8 @@ describe('Message Value Object', () => {
     })
 
     it('should throw error for null/undefined message', () => {
-      expect(() => new Message(null as any)).toThrow('Message cannot be empty')
-      expect(() => new Message(undefined as any)).toThrow('Message cannot be empty')
+      expect(() => new Message(null as any)).toThrow('Message must be a string')
+      expect(() => new Message(undefined as any)).toThrow('Message must be a string')
     })
 
     it('should throw error for too long message', () => {

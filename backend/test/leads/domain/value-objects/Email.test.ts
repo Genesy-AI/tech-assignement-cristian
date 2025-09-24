@@ -24,8 +24,8 @@ describe('Email Value Object', () => {
     })
 
     it('should throw error for null/undefined email', () => {
-      expect(() => new Email(null as any)).toThrow('Email cannot be empty')
-      expect(() => new Email(undefined as any)).toThrow('Email cannot be empty')
+      expect(() => new Email(null as any)).toThrow('Email is required and must be a string')
+      expect(() => new Email(undefined as any)).toThrow('Email is required and must be a string')
     })
 
     it('should throw error for invalid format', () => {

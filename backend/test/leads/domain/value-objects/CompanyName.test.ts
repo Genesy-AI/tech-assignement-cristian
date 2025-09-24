@@ -19,8 +19,8 @@ describe('CompanyName Value Object', () => {
     })
 
     it('should throw error for null/undefined company name', () => {
-      expect(() => new CompanyName(null as any)).toThrow('Company name cannot be empty')
-      expect(() => new CompanyName(undefined as any)).toThrow('Company name cannot be empty')
+      expect(() => new CompanyName(null as any)).toThrow('Company name must be a string')
+      expect(() => new CompanyName(undefined as any)).toThrow('Company name must be a string')
     })
 
     it('should throw error for too long company name', () => {

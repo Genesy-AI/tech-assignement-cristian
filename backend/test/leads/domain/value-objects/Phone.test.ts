@@ -19,8 +19,8 @@ describe('Phone Value Object', () => {
     })
 
     it('should throw error for null/undefined phone', () => {
-      expect(() => new Phone(null as any)).toThrow('Phone cannot be empty')
-      expect(() => new Phone(undefined as any)).toThrow('Phone cannot be empty')
+      expect(() => new Phone(null as any)).toThrow('Phone must be a string')
+      expect(() => new Phone(undefined as any)).toThrow('Phone must be a string')
     })
 
     it('should throw error for too long phone', () => {

@@ -24,8 +24,8 @@ describe('CountryCode Value Object', () => {
     })
 
     it('should throw error for null/undefined country code', () => {
-      expect(() => new CountryCode(null as any)).toThrow('Country code cannot be empty')
-      expect(() => new CountryCode(undefined as any)).toThrow('Country code cannot be empty')
+      expect(() => new CountryCode(null as any)).toThrow('Country code must be a string')
+      expect(() => new CountryCode(undefined as any)).toThrow('Country code must be a string')
     })
 
     it('should throw error for invalid format', () => {

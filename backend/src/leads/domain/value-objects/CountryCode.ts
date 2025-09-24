@@ -1,9 +1,9 @@
 export class CountryCode {
-  private readonly value: string
+  private readonly value: string | null
 
-  constructor(value: string, validate: boolean = true) {
+  constructor(value: string | null, validate: boolean = true) {
     if (value === null || value === undefined) {
-      this.value = ''
+      this.value = null
     } else {
       const trimmed = value.trim().toUpperCase()
       this.value = trimmed
@@ -14,7 +14,7 @@ export class CountryCode {
     }
   }
 
-  static create(value: string, validate: boolean = true): CountryCode {
+  static create(value: string | null, validate: boolean = true): CountryCode {
     return new CountryCode(value, validate)
   }
 
@@ -42,7 +42,7 @@ export class CountryCode {
     return countryCodeRegex.test(countryCode)
   }
 
-  getValue(): string {
+  getValue(): string | null {
     return this.value
   }
 
@@ -51,6 +51,6 @@ export class CountryCode {
   }
 
   toString(): string {
-    return this.value
+    return this.value || ''
   }
 }

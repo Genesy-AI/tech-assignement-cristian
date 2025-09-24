@@ -1,9 +1,9 @@
 export class CompanyWebsite {
-  private readonly value: string
+  private readonly value: string | null
 
-  constructor(value: string, validate: boolean = true) {
+  constructor(value: string | null, validate: boolean = true) {
     if (value === null || value === undefined) {
-      this.value = ''
+      this.value = null
     } else {
       const trimmed = value.trim()
       this.value = this.normalizeUrl(trimmed)
@@ -14,7 +14,7 @@ export class CompanyWebsite {
     }
   }
 
-  static create(value: string, validate: boolean = true): CompanyWebsite {
+  static create(value: string | null, validate: boolean = true): CompanyWebsite {
     return new CompanyWebsite(value, validate)
   }
 
@@ -51,11 +51,12 @@ export class CompanyWebsite {
     return url.replace(/^https?:\/\//, '')
   }
 
-  getValue(): string {
+  getValue(): string | null {
     return this.value
   }
 
-  getFullUrl(): string {
+  getFullUrl(): string | null {
+    if (this.value === null) return null
     return this.value.startsWith('http') ? this.value : `https://${this.value}`
   }
 
@@ -64,6 +65,6 @@ export class CompanyWebsite {
   }
 
   toString(): string {
-    return this.value
+    return this.value || ''
   }
 }

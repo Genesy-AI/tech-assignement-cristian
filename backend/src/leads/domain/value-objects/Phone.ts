@@ -1,9 +1,9 @@
 export class Phone {
-  private readonly value: string
+  private readonly value: string | null
 
-  constructor(value: string, validate: boolean = true) {
+  constructor(value: string | null, validate: boolean = true) {
     if (value === null || value === undefined) {
-      this.value = ''
+      this.value = null
     } else {
       const trimmed = value.trim()
       this.value = trimmed
@@ -14,7 +14,7 @@ export class Phone {
     }
   }
 
-  static create(value: string, validate: boolean = true): Phone {
+  static create(value: string | null, validate: boolean = true): Phone {
     return new Phone(value, validate)
   }
 
@@ -47,11 +47,12 @@ export class Phone {
     return phoneRegex.test(phone) && phone.replace(/[\s\-\(\)\.x]/g, '').length >= 7
   }
 
-  getValue(): string {
+  getValue(): string | null {
     return this.value
   }
 
-  getCleanNumber(): string {
+  getCleanNumber(): string | null {
+    if (this.value === null) return null
     return this.value.replace(/[\s\-\(\)\.x]/g, '')
   }
 
@@ -60,6 +61,6 @@ export class Phone {
   }
 
   toString(): string {
-    return this.value
+    return this.value || ''
   }
 }

@@ -24,8 +24,8 @@ describe('CompanyWebsite Value Object', () => {
     })
 
     it('should throw error for null/undefined website', () => {
-      expect(() => new CompanyWebsite(null as any)).toThrow('Company website cannot be empty')
-      expect(() => new CompanyWebsite(undefined as any)).toThrow('Company website cannot be empty')
+      expect(() => new CompanyWebsite(null as any)).toThrow('Company website must be a string')
+      expect(() => new CompanyWebsite(undefined as any)).toThrow('Company website must be a string')
     })
 
     it('should throw error for too long website', () => {

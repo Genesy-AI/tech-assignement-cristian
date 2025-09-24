@@ -1,9 +1,9 @@
 export class Message {
-  private readonly value: string
+  private readonly value: string | null
 
-  constructor(value: string, validate: boolean = true) {
+  constructor(value: string | null, validate: boolean = true) {
     if (value === null || value === undefined) {
-      this.value = ''
+      this.value = null
     } else {
       const trimmed = value.trim()
       this.value = trimmed
@@ -14,7 +14,7 @@ export class Message {
     }
   }
 
-  static create(value: string, validate: boolean = true): Message {
+  static create(value: string | null, validate: boolean = true): Message {
     return new Message(value, validate)
   }
 
@@ -36,7 +36,7 @@ export class Message {
     }
   }
 
-  getValue(): string {
+  getValue(): string | null {
     return this.value
   }
 
@@ -49,6 +49,6 @@ export class Message {
   }
 
   toString(): string {
-    return this.value
+    return this.value || ''
   }
 }

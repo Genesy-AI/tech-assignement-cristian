@@ -19,8 +19,8 @@ describe('JobTitle Value Object', () => {
     })
 
     it('should throw error for null/undefined job title', () => {
-      expect(() => new JobTitle(null as any)).toThrow('Job title cannot be empty')
-      expect(() => new JobTitle(undefined as any)).toThrow('Job title cannot be empty')
+      expect(() => new JobTitle(null as any)).toThrow('Job title must be a string')
+      expect(() => new JobTitle(undefined as any)).toThrow('Job title must be a string')
     })
 
     it('should throw error for too long job title', () => {

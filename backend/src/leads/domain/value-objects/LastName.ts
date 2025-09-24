@@ -1,9 +1,9 @@
 export class LastName {
-  private readonly value: string
+  private readonly value: string | null
 
-  constructor(value: string, validate: boolean = true) {
+  constructor(value: string | null, validate: boolean = true) {
     if (value === null || value === undefined) {
-      this.value = ''
+      this.value = null
     } else {
       const trimmed = value.trim()
       this.value = trimmed
@@ -14,7 +14,7 @@ export class LastName {
     }
   }
 
-  static create(value: string, validate: boolean = true): LastName {
+  static create(value: string | null, validate: boolean = true): LastName {
     return new LastName(value, validate)
   }
 
@@ -36,7 +36,7 @@ export class LastName {
     }
   }
 
-  getValue(): string {
+  getValue(): string | null {
     return this.value
   }
 
@@ -45,6 +45,6 @@ export class LastName {
   }
 
   toString(): string {
-    return this.value
+    return this.value || ''
   }
 }

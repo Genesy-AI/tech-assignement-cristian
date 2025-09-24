@@ -1,9 +1,9 @@
 export class Email {
-  private readonly value: string
+  private readonly value: string | null
 
-  constructor(value: string, validate: boolean = true) {
+  constructor(value: string | null, validate: boolean = true) {
     if (value === null || value === undefined) {
-      this.value = ''
+      this.value = null
     } else {
       const trimmed = value.trim().toLowerCase()
       this.value = trimmed
@@ -14,7 +14,7 @@ export class Email {
     }
   }
 
-  static create(value: string, validate: boolean = true): Email {
+  static create(value: string | null, validate: boolean = true): Email {
     return new Email(value, validate)
   }
 
@@ -45,11 +45,12 @@ export class Email {
     return emailRegex.test(email)
   }
 
-  getValue(): string {
+  getValue(): string | null {
     return this.value
   }
 
-  getDomain(): string {
+  getDomain(): string | null {
+    if (this.value === null) return null
     return this.value.split('@')[1]
   }
 
@@ -58,6 +59,6 @@ export class Email {
   }
 
   toString(): string {
-    return this.value
+    return this.value || ''
   }
 }

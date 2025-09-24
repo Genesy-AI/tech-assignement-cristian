@@ -19,8 +19,8 @@ describe('LastName Value Object', () => {
     })
 
     it('should throw error for null/undefined last name', () => {
-      expect(() => new LastName(null as any)).toThrow('Last name cannot be empty')
-      expect(() => new LastName(undefined as any)).toThrow('Last name cannot be empty')
+      expect(() => new LastName(null as any)).toThrow('Last name is required and must be a string')
+      expect(() => new LastName(undefined as any)).toThrow('Last name is required and must be a string')
     })
 
     it('should throw error for too long last name', () => {
