@@ -21,7 +21,6 @@ export async function astraDialerActivity(input: PhoneEnrichmentInput): Promise<
 
   try {
     const config = getProviderConfig()
-    console.log(`[AstraDialer] Querying phone for: ${email}`)
     
     const response = await axios.post(
       config.astraDialer.baseUrl,
@@ -40,16 +39,12 @@ export async function astraDialerActivity(input: PhoneEnrichmentInput): Promise<
     const { phoneNmbr } = response.data || {}
     const phone = phoneNmbr || null
     
-    console.log(`[AstraDialer] Result for ${email}: ${phone ? 'Phone found' : 'No phone found'}`)
-    
     return {
       phone,
       provider: 'AstraDialer',
       success: !!phone
     }
   } catch (error) {
-    console.error(`[AstraDialer] Error for ${email}:`, error)
-    
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return {
       phone: null,

@@ -23,7 +23,6 @@ export async function orionConnectActivity(input: PhoneEnrichmentInput): Promise
 
   try {
     const config = getProviderConfig()
-    console.log(`[OrionConnect] Querying phone for: ${fullName} at ${companyWebsite}`)
     
     const response = await axios.post(
       config.orionConnect.baseUrl,
@@ -42,16 +41,12 @@ export async function orionConnectActivity(input: PhoneEnrichmentInput): Promise
 
     const phone = response.data?.phone || null
     
-    console.log(`[OrionConnect] Result for ${fullName}: ${phone ? 'Phone found' : 'No phone found'}`)
-    
     return {
       phone,
       provider: 'OrionConnect',
       success: true
     }
   } catch (error) {
-    console.error(`[OrionConnect] Error for ${fullName}:`, error)
-    
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return {
       phone: null,

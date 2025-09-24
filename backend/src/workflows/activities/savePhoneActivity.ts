@@ -36,7 +36,6 @@ export async function savePhoneActivity(input: SavePhoneInput): Promise<SavePhon
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    console.error(`[SavePhoneActivity] Error updating lead ${leadId}:`, errorMessage)
     
     return {
       success: false,

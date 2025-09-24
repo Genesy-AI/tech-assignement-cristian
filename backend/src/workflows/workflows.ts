@@ -67,8 +67,6 @@ export async function phoneEnrichmentWorkflow(
     { name: 'AstraDialer', activity: astraDialerActivity }
   ]
 
-  console.log(`[Orchestrator] Starting phone enrichment for lead ${lead.id}: ${lead.firstName} ${lead.lastName}`)
-
   for (const provider of providers) {
     const result = await provider.activity({ lead })
 
@@ -79,13 +77,10 @@ export async function phoneEnrichmentWorkflow(
       })
 
       if (saveResult.success) {
-        console.log(`[Orchestrator] Successfully saved phone ${result.phone} for lead ${lead.id} using ${provider.name}`)
         return {
           phone: result.phone,
           provider: provider.name
         }
-      } else {
-        console.error(`[Orchestrator] Failed to save phone for lead ${lead.id}: ${saveResult.error}`)
       }
     }
   }

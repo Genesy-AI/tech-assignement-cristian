@@ -22,7 +22,6 @@ export async function nimbusLookupActivity(input: PhoneEnrichmentInput): Promise
 
   try {
     const config = getProviderConfig()
-    console.log(`[NimbusLookup] Querying phone for: ${email} (${jobTitle})`)
     
     const response = await axios.post(
       config.nimbusLookup.baseUrl,
@@ -43,9 +42,7 @@ export async function nimbusLookupActivity(input: PhoneEnrichmentInput): Promise
 
     const { phoneNmbr } = response.data || {}
 
-    let phone: string | null = phoneNmbr.toString()
-    
-    console.log(`[NimbusLookup] Result for ${email}: ${phone ? 'Phone found' : 'No phone found'}`)
+    let phone: string | null = phoneNmbr ? phoneNmbr.toString() : null
     
     return {
       phone,
@@ -53,8 +50,6 @@ export async function nimbusLookupActivity(input: PhoneEnrichmentInput): Promise
       success: !!phone
     }
   } catch (error) {
-    console.error(`[NimbusLookup] Error for ${email}:`, error)
-    
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return {
       phone: null,
