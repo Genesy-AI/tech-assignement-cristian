@@ -1,6 +1,6 @@
 import { Connection, Client } from '@temporalio/client'
 import { LeadRepository } from '../../domain/LeadRepository'
-import { phoneEnrichmentWorkflow, PhoneEnrichmentWorkflowResult } from '../../../workflows/workflows'
+import { phoneEnrichmentWorkflow, PhoneEnrichmentWorkflowResult } from '../../../workflows'
 
 export interface EnrichPhoneNumbersInput {
   leadIds: number[]
@@ -23,25 +23,7 @@ export class EnrichPhoneNumbersUseCase {
   async execute(input: EnrichPhoneNumbersInput): Promise<EnrichPhoneNumbersResult> {
     const { leadIds } = input
     
-    if (leadIds.length === 0) {
-      return {
-        success: false,
-        processedCount: 0,
-        results: [],
-        errors: [{ leadId: 0, leadName: 'N/A', error: 'No lead IDs provided' }]
-      }
-    }
-
     const leads = await this.leadRepo.findManyByIds(leadIds)
-    if (leads.length === 0) {
-      return {
-        success: false,
-        processedCount: 0,
-        results: [],
-        errors: [{ leadId: 0, leadName: 'N/A', error: 'No leads found with provided IDs' }]
-      }
-    }
-
     const connection = await Connection.connect({ address: 'localhost:7233' })
     const client = new Client({ connection, namespace: 'default' })
 
@@ -50,44 +32,31 @@ export class EnrichPhoneNumbersUseCase {
     let processedCount = 0
 
     try {
-      // Process leads in parallel (with concurrency limit if needed)
       const enrichmentPromises = leads.map(async (lead) => {
         const leadName = `${lead.firstName} ${lead.lastName}`.trim()
         
         try {
-          // Skip if lead already has a phone number
           if (lead.phone) {
-            console.log(`[EnrichPhoneNumbers] Lead ${lead.id} already has phone: ${lead.phone}`)
             return {
-              leadId: lead.id!,
               phone: lead.phone,
-              provider: 'existing',
-              success: true,
-              attempts: []
+              provider: 'existing'
             } as PhoneEnrichmentWorkflowResult
           }
 
           // Create idempotent workflow ID to prevent duplicate runs
           const workflowId = `enrich-phone-${lead.id}`
-          
-          console.log(`[EnrichPhoneNumbers] Starting workflow for lead ${lead.id}: ${leadName}`)
-
           const result = await client.workflow.execute(phoneEnrichmentWorkflow, {
             taskQueue: 'myQueue',
             workflowId,
             args: [{
-              leadId: lead.id!,
-              fullName: leadName,
-              email: lead.email,
-              companyWebsite: lead.companyWebsite || undefined,
-              jobTitle: lead.jobTitle || undefined
+              lead
             }]
           })
 
           // Update lead with phone number if found
-          if (result.success && result.phone) {
+          if (result.phone) {
             await this.leadRepo.update(lead.id!, { phone: result.phone })
-            console.log(`[EnrichPhoneNumbers] Updated lead ${lead.id} with phone: ${result.phone}`)
+            console.log(`[EnrichPhoneNumbers] Updated lead ${lead.id} with phone: ${result.phone} (provider: ${result.provider})`)
           }
 
           return result

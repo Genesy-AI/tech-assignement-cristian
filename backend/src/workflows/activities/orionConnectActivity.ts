@@ -1,33 +1,22 @@
 import axios from 'axios'
-
-export interface PhoneEnrichmentInput {
-  leadId: number
-  fullName: string
-  email: string
-  companyWebsite?: string
-  jobTitle?: string
-}
-
-export interface PhoneEnrichmentResult {
-  phone: string | null
-  provider: string
-  success: boolean
-  error?: string
-}
+import type { PhoneEnrichmentInput, PhoneEnrichmentResult } from './types'
 
 /**
  * Orion Connect Provider Activity
  * Provider with the best data in the market, but slow and fails sometimes
+ * Requires: firstName, lastName and companyWebsite
  */
 export async function orionConnectActivity(input: PhoneEnrichmentInput): Promise<PhoneEnrichmentResult> {
-  const { fullName, companyWebsite } = input
+  const { lead } = input
+  const fullName = `${lead.firstName} ${lead.lastName}`
+  const companyWebsite = lead.companyWebsite
   
-  if (!companyWebsite) {
+  if (!lead.firstName || !lead.lastName || !companyWebsite) {
     return {
       phone: null,
       provider: 'OrionConnect',
       success: false,
-      error: 'Company website is required for Orion Connect'
+      error: 'First name, last name and company website are required for Orion Connect'
     }
   }
 
