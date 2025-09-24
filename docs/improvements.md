@@ -5,6 +5,10 @@
 ### Temporal Phone Waterfall
 Implemented a **Temporal workflow** that finds a user's phone number by querying three providers in sequence: Orion Connect (best data, slow), Nimbus Lookup (new provider), and Astra Dialer (fastest, worst data). The workflow stops early when a phone is found and saves it to the database.
 
+The provider order was strategically chosen to prioritize **data quality over speed**, ensuring customers receive the most accurate and reliable phone numbers. We start with the highest-quality provider (Orion Connect) and fall back to faster but lower-quality providers only when necessary, maximizing customer value while maintaining reasonable response times.
+
+From my point of view the product should ask for feedback to the customers in order to evaluate if new providers are working well.
+
 ### Data Validation System
 Added comprehensive validation for all lead data fields (email, phone, names, company info) with proper error messages. Implemented both strict validation for new data and lenient validation for existing data to handle bulk imports without breaking.
 
@@ -21,7 +25,8 @@ Added extensive test coverage including unit tests for value objects, domain ent
 
 ## ⚙️ Installation instructions
 
-Installation instructions of my take-home assesment.
+Installation instructions of my take-home assessment.
+
 1. Please go to backend/
 2. Duplicate env.sample to .env
 3. Fill the .env with the urls and api_keys provided in /README.md
