@@ -21,6 +21,13 @@ Implemented a clean, scalable architecture using Domain-Driven Design principles
 ### Comprehensive Testing Strategy
 Added extensive test coverage including unit tests for value objects, domain entities, Temporal workflows, and activities. All tests use proper mocking and follow Temporal testing best practices.
 
+### Email bug fix and improvement
+Right now I changed the way that we are validating mails avoiding to use temporal and just doing a plain validation like '<username>@<domain.something>' inside our API. This will increase a lot the performance, our customers will see results instantly.
+For strings treatments does not make sense to use asynchronous and distributed systems, by the other hand we’re going to save a bit on costs by not using them.
+
+### Decisions took
+I prioritized the backend work over the frontend ones because in the end my assesment is focused on the backend side, but in a real world I see some huge improvements on it, for example a better way to notify the users about errors on each lead, an score system for the data, save metrics about the providers and decide which is the best provider over the metrics instead of having fixed values (data and performance can change in the future for each one). But coming back to my assessment I preferred to focus on what really matters trying to give as well value to this tinygenesy product.
+
 ---
 
 ## ⚙️ Installation instructions
