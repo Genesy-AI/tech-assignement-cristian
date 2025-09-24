@@ -41,7 +41,7 @@ export class Message {
   }
 
   getLength(): number {
-    return this.value.length
+    return this.value?.length || 0
   }
 
   equals(other: Message): boolean {

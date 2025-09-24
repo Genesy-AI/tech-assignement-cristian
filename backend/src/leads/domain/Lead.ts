@@ -23,8 +23,8 @@ export class Lead {
     private readonly _companyWebsite: CompanyWebsite | null,
     private readonly _message: Message | null,
     private readonly _emailVerified: boolean | null,
-    private readonly _createdAt: Date | undefined,
-    private readonly _updatedAt: Date | undefined
+    private readonly _createdAt: Date | undefined = undefined,
+    private readonly _updatedAt: Date | undefined = undefined
   ) {}
 
   static create(data: {
@@ -60,9 +60,7 @@ export class Lead {
       companyName,
       companyWebsite,
       message,
-      data.emailVerified || null,
-      undefined,
-      undefined
+      data.emailVerified || null
     )
   }
 
@@ -222,8 +220,7 @@ export class Lead {
       this._companyWebsite,
       newMessage,
       this._emailVerified,
-      this._createdAt,
-      new Date()
+      this._createdAt
     )
   }
 
@@ -240,8 +237,7 @@ export class Lead {
       this._companyWebsite,
       this._message,
       true,
-      this._createdAt,
-      new Date()
+      this._createdAt
     )
   }
 
@@ -258,8 +254,7 @@ export class Lead {
       this._companyWebsite,
       this._message,
       false,
-      this._createdAt,
-      new Date()
+      this._createdAt
     )
   }
 
@@ -277,8 +272,7 @@ export class Lead {
       this._companyWebsite,
       this._message,
       this._emailVerified,
-      this._createdAt,
-      new Date()
+      this._createdAt
     )
   }
 
@@ -296,8 +290,7 @@ export class Lead {
       this._companyWebsite,
       this._message,
       this._emailVerified,
-      this._createdAt,
-      new Date()
+      this._createdAt
     )
   }
 
@@ -315,8 +308,7 @@ export class Lead {
       this._companyWebsite,
       this._message,
       this._emailVerified,
-      this._createdAt,
-      new Date()
+      this._createdAt
     )
   }
 
@@ -334,8 +326,7 @@ export class Lead {
       newCompanyWebsite,
       this._message,
       this._emailVerified,
-      this._createdAt,
-      new Date()
+      this._createdAt
     )
   }
 
@@ -352,6 +343,8 @@ export class Lead {
     companyWebsite: string | null
     message: string | null
     emailVerified: boolean | null
+    createdAt?: Date
+    updatedAt?: Date
   } {
     return {
       id: this._id,
@@ -364,7 +357,9 @@ export class Lead {
       companyName: this._companyName?.getValue() || null,
       companyWebsite: this._companyWebsite?.getValue() || null,
       message: this._message?.getValue() || null,
-      emailVerified: this._emailVerified
+      emailVerified: this._emailVerified,
+      createdAt: this._createdAt,
+      updatedAt: this._updatedAt
     }
   }
 

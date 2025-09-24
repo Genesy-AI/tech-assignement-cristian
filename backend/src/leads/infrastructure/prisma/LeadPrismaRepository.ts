@@ -9,9 +9,9 @@ export class LeadPrismaRepository implements LeadRepository {
     const persistenceData = lead.toPersistence()
     const createdLead = await this.prisma.lead.create({
       data: {
-        firstName: persistenceData.firstName,
-        lastName: persistenceData.lastName,
-        email: persistenceData.email,
+        firstName: persistenceData.firstName!,
+        lastName: persistenceData.lastName!,
+        email: persistenceData.email!,
         phone: persistenceData.phone,
         jobTitle: persistenceData.jobTitle,
         countryCode: persistenceData.countryCode,
@@ -39,9 +39,9 @@ export class LeadPrismaRepository implements LeadRepository {
     const updatedLead = await this.prisma.lead.update({
       where: { id },
       data: {
-        firstName: persistenceData.firstName,
-        lastName: persistenceData.lastName,
-        email: persistenceData.email,
+        firstName: persistenceData.firstName!,
+        lastName: persistenceData.lastName!,
+        email: persistenceData.email!,
         phone: persistenceData.phone,
         jobTitle: persistenceData.jobTitle,
         countryCode: persistenceData.countryCode,

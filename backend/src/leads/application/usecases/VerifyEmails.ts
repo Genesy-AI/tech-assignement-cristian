@@ -19,7 +19,7 @@ export class VerifyEmailsUseCase {
 
     for (const lead of leads) {
       try {
-        const verification = this.emailVerifier.verify(lead.email.getValue())
+        const verification = this.emailVerifier.verify(lead.email.getValue()!)
         const updatedLead = verification.isValid ? lead.markEmailAsVerified() : lead.markEmailAsUnverified()
         await this.leadRepo.update(lead.id!, updatedLead)
         results.push({ 

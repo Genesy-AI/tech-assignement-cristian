@@ -16,7 +16,7 @@ export const updateLead = async (req: Request, res: Response) => {
 
     const updatedLead = Lead.create({
       firstName: String(name),
-      lastName: lastName ? String(lastName) : existingLead.lastName.getValue(),
+      lastName: lastName ? String(lastName) : existingLead.lastName.getValue()!,
       email: String(email),
       phone: phone ? String(phone) : null,
       countryCode: countryCode ? String(countryCode) : null,

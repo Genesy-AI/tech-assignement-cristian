@@ -51,15 +51,15 @@ export class BulkImportLeadsUseCase {
 
     // Check for duplicates
     const existingLeads = await Promise.all(
-      validLeads.map((lead) => this.leadRepo.findByFirstAndLast(lead.firstName.getValue(), lead.lastName.getValue()))
+      validLeads.map((lead) => this.leadRepo.findByFirstAndLast(lead.firstName.getValue()!, lead.lastName.getValue()!))
     )
 
     const existingSet = new Set(
-      existingLeads.flat().map((lead) => `${lead.firstName.getValue().toLowerCase()}_${lead.lastName.getValue().toLowerCase()}`)
+      existingLeads.flat().map((lead) => `${lead.firstName.getValue()!.toLowerCase()}_${lead.lastName.getValue()!.toLowerCase()}`)
     )
 
     const uniqueLeads = validLeads.filter((lead) => {
-      const key = `${lead.firstName.getValue().toLowerCase()}_${lead.lastName.getValue().toLowerCase()}`
+      const key = `${lead.firstName.getValue()!.toLowerCase()}_${lead.lastName.getValue()!.toLowerCase()}`
       return !existingSet.has(key)
     })
 
